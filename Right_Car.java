@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class Right_Car extends Car {
-    ArrayList<Integer> cars;
 
     public Right_Car(int num) {
         this.num = num;
