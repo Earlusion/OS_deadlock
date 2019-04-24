@@ -6,11 +6,13 @@ Assignment 4
 */
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Deadlock {
     static ArrayList<Thread> threads = new ArrayList<Thread>();
 
-    static ArrayList<Integer> tunnel = new ArrayList<Integer>();
+    static Queue<Integer> tunnel = new LinkedList<Integer>();
 
     public static void main(String[] args) {
 

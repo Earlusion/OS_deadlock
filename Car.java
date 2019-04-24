@@ -1,9 +1,9 @@
-import java.util.ArrayList;
+import java.util.Queue;
 
 public abstract class Car extends Thread{
     int numCars;
     int[] flag;
-    ArrayList<Integer> tunnel;
+    Queue<Integer> tunnel;
 
     // public abstract String created();
 
