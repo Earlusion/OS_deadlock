@@ -81,8 +81,11 @@ class Right_Cars implements Runnable {
                 tunnel = -1;
                 rCar_tracker += 2;
 
-                flag[1] = 0;
-                flag[0] = 1;
+                if (flag[0] != -1) {
+                    flag[1] = 0;
+                    flag[0] = 1;
+                } else
+                    flag[1] = 1;
             }
             flag[1] = -1;
 
@@ -126,7 +129,6 @@ class Left_Cars implements Runnable {
                 System.out.println("Left-bound Car " + lCar_tracker + " wants to enter the tunnel.\n");
                 Thread.sleep(500);
 
-                System.out.println(flag[1]);
                 synchronized (flag) {
 
                     // Lock
@@ -134,7 +136,6 @@ class Left_Cars implements Runnable {
                         while (flag[0] == 0)
                             ;
 
-                    
                     // Crit section
                     lCar_tracker = carLine.poll();
 
@@ -149,8 +150,11 @@ class Left_Cars implements Runnable {
                 tunnel = -1;
                 lCar_tracker += 2;
 
-                flag[0] = 0;
-                flag[1] = 1;
+                if (flag[1] != -1) {
+                    flag[0] = 0;
+                    flag[1] = 1;
+                } else
+                    flag[0] = -1;
 
             }
             flag[0] = -1;
