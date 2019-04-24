@@ -19,10 +19,10 @@ public class Deadlock {
         flag[0] = 0;
         flag[1] = 1;
 
-        Thread right_cars = new Thread(new Right_Cars(20, flag, tunnel));
+        Thread right_cars = new Thread(new Right_Cars(10, flag, tunnel));
         right_cars.start();
 
-        Thread left_cars = new Thread(new Left_Cars(20, flag, tunnel));
+        Thread left_cars = new Thread(new Left_Cars(10, flag, tunnel));
         left_cars.start();
 
     }
@@ -33,6 +33,7 @@ class Right_Cars implements Runnable {
     int numCars;
     int car_count;
     int rCar_tracker;
+    boolean done;
 
     int[] flag;
     int tunnel;
@@ -50,40 +51,49 @@ class Right_Cars implements Runnable {
     public void run() {
 
         try {
-            while (car_count <= numCars) {
-                Thread.sleep(2000);
+            while (car_count < numCars) {
+                Thread.sleep(1500);
 
                 // Add car to wait queue and increment car counter
                 carLine.add(rCar_tracker);
                 car_count++;
 
                 System.out.println("Right-bound Car " + rCar_tracker + " wants to enter the tunnel.\n");
-
+                Thread.sleep(600);
                 synchronized (flag) {
 
-                // Lock
-                while (flag[1] == 0);
+                    // Lock
+                    while (flag[1] == 0)
+                        ;
 
-                // Crit section
-                rCar_tracker = carLine.poll();
+                    // Crit section
+                    rCar_tracker = carLine.poll();
 
-                // Car is travelling
-                tunnel = rCar_tracker;
-                System.out.println("Right-bound Car " + rCar_tracker + " is in the tunnel.\n");
-                Thread.sleep(1500);
+                    // Car is travelling
+                    tunnel = rCar_tracker;
+                    System.out.println("Right-bound Car " + rCar_tracker + " is in the tunnel.\n");
+                    Thread.sleep(1000);
                 }
 
                 // Car exits tunnel, clear tunnel, release Left lock
                 System.out.println("Right-bound Car " + rCar_tracker + " is exiting the tunnel.\n");
                 tunnel = -1;
                 rCar_tracker += 2;
-                flag[1] = 0;
-                flag[0] = 1;
+
+                synchronized (flag) {
+                    if (flag[0] != -1 || flag[1] != -1) {
+                        flag[1] = 0;
+                        flag[0] = 1;
+                    }
+                }
             }
+            flag[1] = -1;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("Right-bound line empty!\n");
     }
 }
 
@@ -110,37 +120,47 @@ class Left_Cars implements Runnable {
 
         try {
             while (car_count <= numCars) {
-                Thread.sleep(2000);
+                Thread.sleep(2500);
 
                 // Add car to wait queue and increment car counter
                 carLine.add(lCar_tracker);
                 car_count++;
 
                 System.out.println("Left-bound Car " + lCar_tracker + " wants to enter the tunnel.\n");
-
+                Thread.sleep(500);
                 synchronized (flag) {
 
-                // Lock
-                while (flag[0] == 0);
+                    // Lock
+                    while (flag[0] == 0)
+                        ;
 
-                // Crit section
-                lCar_tracker = carLine.poll();
+                    // Crit section
+                    lCar_tracker = carLine.poll();
 
-                // Car is travelling
-                tunnel = lCar_tracker;
-                System.out.println("Left-bound Car " + lCar_tracker + " is in the tunnel.\n");
-                Thread.sleep(1500);
+                    // Car is travelling
+                    tunnel = lCar_tracker;
+                    System.out.println("Left-bound Car " + lCar_tracker + " is in the tunnel.\n");
+                    Thread.sleep(1500);
                 }
 
                 // Car exits tunnel, clear tunnel, release Left lock
                 System.out.println("Left-bound Car " + lCar_tracker + " is exiting the tunnel.\n");
                 tunnel = -1;
                 lCar_tracker += 2;
-                flag[0] = 0;
-                flag[1] = 1;
+
+                synchronized (flag) {
+                    if (flag[0] != -1 || flag[1] != -1) {
+                        flag[0] = 0;
+                        flag[1] = 1;
+                    }
+                }
             }
+            flag[0] = -1;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("Left-bound line empty!\n");
     }
 }
