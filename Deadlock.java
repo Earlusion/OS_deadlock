@@ -1,27 +1,24 @@
 /*
-Marco Colasito and Amanda Seaholtz
+Marco Colasito and Amanda Seasholtz
 CS 4345: Operating Systems
 Spring '19
 Assignment 4
 */
 
-//import java.io.*;
 import java.util.ArrayList;
 
 public class Deadlock {
     static ArrayList<Thread> threads = new ArrayList<Thread>();
 
+    static ArrayList<Integer> tunnel = new ArrayList<Integer>();
+
     public static void main(String[] args) {
 
-        for (int i = 0; i < 20; i += 2) {
-            Car left_cars = new Left_Car(i);
+            Car left_cars = new Left_Cars(20, tunnel);
             threads.add(left_cars);
-        }
 
-        for (int i = 1; i < 20; i += 2) {
-            Car right_cars = new Right_Car(i);
+            Car right_cars = new Right_Cars(20, tunnel);
             threads.add(right_cars);
-        }
 
         for (Thread t : threads)
             t.start();

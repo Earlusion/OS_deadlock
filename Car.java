@@ -1,15 +1,13 @@
+import java.util.ArrayList;
+
 public abstract class Car extends Thread{
-    int num;
+    int numCars;
     int[] flag;
-    int timer;
+    ArrayList<Integer> tunnel;
 
-    // public void ageTime(){
-    //     timer += 3;
-    // }
+    // public abstract String created();
 
-    public abstract String created();
+    // public abstract String enters();
 
-    public abstract String enters();
-
-    public abstract String leaves();
+    // public abstract String leaves();
 }
